@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutterwine1/webview_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Load environment variables
   await dotenv.load(fileName: ".env");
-  
+
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-  
+
   runApp(const MyApp());
 }
 
@@ -56,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      
+
       // Check if widget is still mounted before using context
       if (!mounted) return;
 
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
       );
@@ -129,6 +130,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                   onPressed: _signIn,
                   child: const Text('Sign In'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const WebViewPage(
+                          url: 'https://flutter.dev',
+                          title: 'Flutter Website',
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('Open Web View'),
                 ),
               ],
             ),
